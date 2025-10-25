@@ -2,104 +2,133 @@
 #include<iostream>
 #include<cstdlib>
 #include<ctime>
-#include<chrono>
-#include<thread>
 using namespace std;
 //function prototypes
 bool startDay(int battery);
 int getWeather();
 bool checkObstacle();
-int location_time(char);
-//bool deliverPackage(string location, int& battery, int& success,int& failed,int& delayed);
-//void displaySummary(int success, int failed, int delayed, int battery);
+bool deliverPackage(string location, int& battery,int drain_per_trip,int& success,int& failed,int& delayed);
+void displaySummary(int success, int failed, int delayed, int battery);
 
 int main() {
 	//initializing variables
 	int batteryLevel = 100;
-	//int success = 0, int failed = 0, int delayed = 0;
-	char loc;
+	const int drain_per_trip = 15;
+	int success = 0,failed = 0,delayed = 0;
+	srand(time(0));
+
 	if (startDay(batteryLevel) == true) {
-		cout << "Starting Deliveries\n";
+		cout << "\nStarting deliveries!\n"<<endl;
+		cout << "------------------------------------\n";
+		for (int i = 1; i <= 3; i++) {
+			string location;
+			cout << "Enter location(A/B/C): ";
+				cin >> location;
+				cout << "------------------------------------\n";
+ deliverPackage(location,batteryLevel,drain_per_trip,success,failed,delayed);
+     cout << "\n\n------------------------------------\n";
+		}
+		displaySummary(success, failed,delayed,batteryLevel);
 	}
-	this_thread::sleep_for(chrono::seconds(1));
-	cout << "Analyzing Weather..\n";
-	this_thread::sleep_for(chrono::seconds(3));
-	cout << "The Weather Right Now is";
-	cout << getWeather() << endl;
-	this_thread::sleep_for(chrono::seconds(1));
-	cout << "Analyzing Obstacles in the Path..\n";
-	this_thread::sleep_for(chrono::seconds(2));
-	cout << checkObstacle();
-	this_thread::sleep_for(chrono::seconds(2));
-	cout << "Enter the Location A,B or C\n";
-	cin >> loc;
-	cout << "Analyzing The Time..\n";
-	this_thread::sleep_for(chrono::seconds(3));
-	cout << "The Estimated Time to Deliver the Package to Your Destination is " << location_time(loc) << " MIN\n";
 
-
-	system("pause");
 	return 0;
 }
 //function definitions
-//starting-the-day function that displays initial conditions and confirms the start of the day.
 bool startDay(int battery) {
 	char start;
-
-	cout << "Welcome To Delivery Drone Simulator!\n";
-	this_thread::sleep_for(chrono::seconds(1));
-	cout << "Initial Battery Level: " << battery << "%" << endl;
-	this_thread::sleep_for(chrono::seconds(1));
-	cout << "Start the Day?(Y/N):\n";
+	cout << "------------------------------------\n";
+	cout << "WELCOME TO DELIVERY DRONE SIMULATOR!\n";
+	cout << "Initial battery level: " << battery << "%" << endl;
+	cout << "------------------------------------\n";
+	cout << "Start the Day?(Y/N): ";
 	cin >> start;
 	if (start == 'Y') {
-		cout << "Preparing For Delivery. Please Wait...\n";
-		this_thread::sleep_for(chrono::seconds(2));
+		cout << "\nPreparing for delivery.Please wait.\n";
 		return true;
 	}
 	else {
-		cout << "NO DELIVERIES FOR TODAY.SHUTING DOWN SYSTEM." << endl << "GOODBYE!" << endl;
+		cout << "\nDelivery Day cancelled.Goodbye!\n";
 		return false;
 	}
 }
 int getWeather() {
-	srand(time(0));
 	int weather = rand() % 3 + 1;
 	switch (weather) {
 	case 1:
-		cout << "SUNNY\n";
+		cout << "Weather is Sunny\n";
 		break;
 	case 2:
-		cout << "WINDY\n";
+		cout << "Weather is Windy\n";
 		break;
 	case 3:
-		cout << "RAINY\n";
+		cout << "Weather is Rainy\n";
 		break;
 
 	}
 	return weather;
 }
 bool checkObstacle() {
-	srand(time(0));
 	bool obstacle = rand() % 2 == 1;
 	if (obstacle == 1) {
-		cout << "OBSTACLE FOUND.\n";
+		return true;
 	}
 	else
 	{
-		cout << "NO OBSTACLE FOUND.ROUTE IS CLEAR.\n";
+		return false;
 	}
-	return obstacle;
 }
-int location_time(char location) {
-	if (location == 'A') {
-		return 30;
+bool deliverPackage(string location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed) {
+	 
+	cout << "Delivering to " << location << " \n";
+
+	int weather = getWeather();
+	bool obstacle = checkObstacle();
+
+	if (weather == 3) {
+		cout << "Flight delayed.\n";
+			delayed++;
+			return false;
 	}
-	else if (location == 'B') {
-		return 45;
+	else if (weather == 2 && battery < 40) {
+		cout << "Weather is too Windy and low battery.\n";
+			cout << "Returning to base to Recharge\n";
+			battery += 10;
+			if (battery > 100) {
+				battery = 100;
+			}
+			delayed++;
+			return false;
 	}
-	else if (location == 'C') {
-		return 60;
+	 if (obstacle == true) {
+		cout << "Obstacle detected. Rerouting path...\n";
+		cout << "Extra battery used during reroute.\n";
+		battery -= ( drain_per_trip + 5);
 	}
-	else { return -1; }
+	else {
+		 cout << "No obstacle detected\n";
+		battery -= drain_per_trip;
+	}
+	
+	 if (battery <= 0) {
+		cout << "Battery exhausted! Delivery failed.\n";
+		failed++;
+		return false;
+	}
+		cout << "Package successfully delivered to Location " << location <<endl;
+		cout << "Remaining battery: " << battery << "%\n";
+		success++;              
+		return true;              
+
+}
+void displaySummary(int success, int failed, int delayed, int battery) {
+	cout << "------------------------------------\n";
+	cout << "         DAY SUMMARY"<<endl;
+	cout << "------------------------------------\n";
+	cout << "Total Deliveries: " << (success + failed + delayed) << endl;
+	cout << "Successful Deliveries: " << success << endl;
+	cout << "Failed Deliveries: " << failed << endl;
+	cout << "Delayed Deliveries: " << delayed << endl;
+	cout << "Remaining Battery: " << battery << "%" << endl;
+	cout << "------------------------------------\n";
+	cout << "End of the Delivery Day. Goodbye!\n";
 }
