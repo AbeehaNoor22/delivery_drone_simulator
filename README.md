@@ -24,7 +24,6 @@ However, they must constantly adapt to unpredictable **weather**, **obstacles**,
 This simulator models that real-world decision-making in a **simplified, interactive form**, making it both **educational** and **practically relevant**.
 
 ## Program Design / Logic
-
 ### Functions Implemented
 1. **`startDay()`** – Starts the program and asks if the user wants to begin deliveries.  
 2. **`getWeather()`** – Randomly generates weather conditions.  
@@ -47,4 +46,20 @@ This simulator models that real-world decision-making in a **simplified, interac
    - Otherwise, delivery is successful.  
 5. After each round, the battery updates and results are displayed.  
 6. When the user exits, **`displaySummary()`** shows the final delivery report.
+## Execution Instructions
 
+### Assumptions:
+-Battery drain per trip = 15%
+-Rerouting due to obstacle = +5% drain
+-Recharge adds +10% battery
+-Maximum load capacity=50 kg
+## Team Collaboration Summary
+## AI tool reflection
+### AI Tools Used:
+ChatGPT
+### Tasks Assisted:
+-Provided error-handling ideas for invalid input (cin.fail() concept).
+-Suggested better documentation format.
+### Reflection:
+-Learned about input validation and error handling.
+## Future improvements
