@@ -49,16 +49,16 @@ This simulator models that real-world decision-making in a **simplified, interac
 ## Execution Instructions
 
 ### Assumptions:
--Battery drain per trip = 15%
--Rerouting due to obstacle = +5% drain
--Recharge adds +10% battery
--Maximum load capacity=50 kg
+-Battery drain per trip = 15%.  
+-Rerouting due to obstacle = +5% drain.  
+-Recharge adds +10% battery.  
+-Maximum load capacity=50 kg.  
 ## Team Collaboration Summary
 ## AI tool reflection
 ### AI Tools Used:
 ChatGPT
 ### Tasks Assisted:
--Provided error-handling ideas for invalid input (cin.fail() concept).
+-Provided error-handling ideas for invalid input (cin.fail() concept).  
 -Suggested better documentation format.
 ### Reflection:
 -Learned about input validation and error handling.
