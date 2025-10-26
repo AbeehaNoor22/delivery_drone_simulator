@@ -8,7 +8,6 @@ A C++ program for delivery drone software managing flights different locations d
 - **Aliza Batool** –  
 - **Fatima Zahra Mustapha** – 
 - **Abeeha Noor** –
-- 
 ## Problem Description
 
 The **Delivery Drone Simulator** is a C++ program that simulates how a delivery drone operates under varying **weather**, **battery**, **load**, and **obstacle** conditions.  
@@ -17,8 +16,7 @@ It allows the user to input **package load** and **delivery location**, and the 
 - Successfully delivers the package  
 - Delays the delivery due to weather or load  
 - Returns to base to recharge
-- 
-## Why This Problem is Interesting
+### Why This Problem is Interesting
 
 In real life, drones are increasingly used for **logistics and delivery services**.  
 However, they must constantly adapt to unpredictable **weather**, **obstacles**, and **battery constraints**.  
@@ -35,7 +33,6 @@ This simulator models that real-world decision-making in a **simplified, interac
 5. **`delivery_time(char location)`** – Returns estimated delivery time for each location (A, B, or C).  
 6. **`deliverPackage(...)`** – Core decision logic for success, delay, or failure.  
 7. **`displaySummary(...)`** – Prints the final summary of the day.  
-
 ### Logic Flow
 1. The program starts with **`startDay()`**, displaying a welcome message.  
 2. For each delivery, the user enters **load** and **location**.  
