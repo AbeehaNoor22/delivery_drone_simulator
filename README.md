@@ -72,6 +72,6 @@ ChatGPT
 -Guidance on `<chrono>` syntax for implementing time delays
 ### Reflection:
 -Learned about input validation and error handling.  
--Learned how to implement time delays in C++ using <chrono>.
+-Learned how to implement time delays in C++ using `<chrono>`.
 ## Future improvements
 The program can be further improved by adding more realistic time delays, more weather conditions, detecting the type of object and not just its presence, the program should also be improved in such a way as to restart just the particular module from the point where the user gives an invalid input and not just break out of the program or start from the very begininning.
