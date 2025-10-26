@@ -17,7 +17,7 @@ bool loadCheck(int);  //verifies if the load is within limit
 
 //MAIN FUNCTION
 int main() {
-	//initializing variables
+	//initializing and declaring variables
 	int batteryLevel = 100;
 	const int drain_per_trip = 15;
 	int success = 0, failed = 0, delayed = 0;  //delivery counters
@@ -45,7 +45,7 @@ int main() {
 				cout << "Invalid input! Please enter a numeric value: ";
 				cin.clear(); // clear error flag
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard bad input
-				cin >> load; // ask again
+				cin >> load; // taking input again
 			}//*Chatgpt was used in this cin.fail part due to error of infinte loop in case of wrong input type*
 
 			if (loadCheck(load) == true) {
@@ -69,7 +69,7 @@ int main() {
 				else { cout << "Invalid Location entered. Please try again.\n"; }
 			}
 			else {
-				//heavy load warning
+				//heavy and invalid load warning
 				cout << "Please try again.\n";
 				cout << "------------------------------------\n";
 			}
@@ -169,10 +169,10 @@ int delivery_time(char location)
 bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed) {
 
 	cout << "Delivering to " << location << " \n";
-	//function calls
+	//function calls within function
 	int weather = getWeather();
 	bool obstacle = checkObstacle();
-	//decision logic
+	//decision making logic
 
 	//obstacle check
 	if (obstacle == true) {
@@ -229,7 +229,7 @@ bool deliverPackage(char location, int& battery, int drain_per_trip, int& succes
 	return true;
 
 }
-//mission summary
+//final summary
 void displaySummary(int success, int failed, int delayed, int battery) {
 	cout << "------------------------------------\n";
 	cout << "         DAY SUMMARY" << endl;
