@@ -12,7 +12,7 @@ bool checkObstacle();
 int delivery_time(char location);//*added this function
 bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed);
 void displaySummary(int success, int failed, int delayed, int battery);
-
+bool loadCheck(int);//added this function
 int main() {
 	//initializing variables
 	int batteryLevel = 100;
@@ -27,17 +27,34 @@ int main() {
 		while (true) //*changed the loop
 		{
 			char location;
-			cout << "Enter location(A/B/C) or enter X to exit. ";
-			cin >> location;
-			cout << "------------------------------------\n";
-			if (location == 'x' || location == 'X') {
-				cout << "End of Deliveries for today.\n";
-				displaySummary(success, failed, delayed, batteryLevel);
-				break;
+			int load;
+			cout << "Enter the delivery package load.\n";
+			cin >> load;
+
+			if (loadCheck(load) == true) {
+
+				cout << "Enter location(A/B/C) or enter X to exit. ";
+				cin >> location;
+				cout << "------------------------------------\n";
+				if (location == 'A' || location == 'a' || location == 'B' || location == 'b' || location == 'C' || location == 'c') {
+					deliverPackage(location, batteryLevel, drain_per_trip, success, failed, delayed);
+					cout << "------------------------------------\n\n";
+					cout << "Time for this delivery will be " << delivery_time(location) << " minutes.\n";
+					cout << "\n------------------------------------\n";
+				}
+				else if (location == 'x' || location == 'X') {
+					cout << "End of Deliveries for today.\n";
+					displaySummary(success, failed, delayed, batteryLevel);
+					break;
+				}
+				else { cout << "Invalid Location entered. Please try again.\n"; }
 			}
-			deliverPackage(location, batteryLevel, drain_per_trip, success, failed, delayed);
-			cout << "------------------------------------\n\n";
-			cout << "Time taken for this delivery was " << delivery_time(location) << " minutes.\n";
+			else {
+				cout << "Please reduce weight and try again.\n";
+				cout << "------------------------------------\n";
+			}
+
+
 		}
 
 	}
@@ -72,13 +89,13 @@ int getWeather() {
 	int weather = rand() % 3 + 1;
 	switch (weather) {
 	case 1:
-		cout << "Weather is Sunny\n";
+		cout << "Weather is Sunny.\n";
 		break;
 	case 2:
-		cout << "Weather is Windy\n";
+		cout << "Weather is Windy.\n";
 		break;
 	case 3:
-		cout << "Weather is Rainy\n";
+		cout << "Weather is Rainy.\n";
 		break;
 
 	}
@@ -96,6 +113,20 @@ bool checkObstacle() {
 		return false;
 	}
 }
+bool loadCheck(int load) {
+	if (load <= 50 && load > 0) {
+		cout << "The weight is within the load capacity.\nProceeding forward...\n";
+		this_thread::sleep_for(chrono::seconds(1));
+		cout << "------------------------------------\n";
+		return true;
+	}
+	else if (load > 50) {
+		cout << "The weight is out of the load capacity\n";
+		return false;
+	}
+	else { cout << "Invalid load entered"; return false; }
+
+}
 int delivery_time(char location) //added ths function
 {
 	cout << "Estimating the total delivery time...\n";
@@ -109,21 +140,20 @@ int delivery_time(char location) //added ths function
 	else if (location == 'C' || location == 'c') {
 		return 60;
 	}
-	else { return -1; }
+	else { cout << "Could not estimate time\n"; }
 }
 bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed) {
 
 	cout << "Delivering to " << location << " \n";
 
 	int weather = getWeather();
-	bool obstacle = checkObstacle();
-
+	//weather based decision making module
 	if (weather == 3) {
 
 		cout << "Flight delayed.\n";
 		delayed++;
 		success++;
-		return false;
+
 	}
 	else if (weather == 2 && battery < 40) {
 		cout << "Weather is too Windy and low battery.\n";
@@ -133,8 +163,14 @@ bool deliverPackage(char location, int& battery, int drain_per_trip, int& succes
 			battery = 100;
 		}
 		delayed++;
-		return false;
+
 	}
+	else if (weather == 2 && battery >= 40) {
+		cout << "Weather is windy but battery is sufficient.\nProceeding with caution.\n";
+		success++;
+	}
+	//obstacle based decision making module
+	bool obstacle = checkObstacle();
 	if (obstacle == true) {
 		cout << "Obstacle detected. Rerouting path...\n";
 		this_thread::sleep_for(chrono::seconds(2));
@@ -142,16 +178,16 @@ bool deliverPackage(char location, int& battery, int drain_per_trip, int& succes
 		battery -= (drain_per_trip + 5);
 	}
 	else {
-		cout << "No obstacle detected\n";
+		cout << "No obstacle detected.\n";
 		battery -= drain_per_trip;
 	}
-
+	//battery based decision making module
 	if (battery <= 0) {
 		cout << "Battery exhausted! Delivery failed.\n";
 		failed++;
-		return false;
+
 	}
-	cout << "Package successfully delivered to Location " << location << endl;
+	cout << "Package successfully delivered to Location. " << location << endl;
 	cout << "Remaining battery: " << battery << "%\n";
 	success++;
 	return true;
