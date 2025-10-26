@@ -2,7 +2,7 @@
 #include<iostream>
 #include<cstdlib>
 #include<ctime>   //for srand and rand
-#include<chrono>  //for adding time delays
+#include<chrono>  //for adding delays
 #include<thread>
 #include <limits>
 using namespace std;
@@ -69,7 +69,7 @@ int main() {
 				else { cout << "Invalid Location entered. Please try again.\n"; }
 			}
 			else {
-				//heavy load and invalid input warning
+				//heavy load warning
 				cout << "Please try again.\n";
 				cout << "------------------------------------\n";
 			}
@@ -149,7 +149,7 @@ bool loadCheck(int load) {
 	else { cout << "Oops! Cannot take this input."; }
 
 }
-//time calculation per delivery
+//time calculation
 int delivery_time(char location)
 {
 	cout << "\nEstimating the total delivery time...\n";
@@ -165,14 +165,14 @@ int delivery_time(char location)
 	}
 	else { cout << "Could not estimate time\n"; }
 }
-//deliver decision
+//delivery decision
 bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed) {
 
 	cout << "Delivering to " << location << " \n";
 	//function calls
 	int weather = getWeather();
 	bool obstacle = checkObstacle();
-	//decision logics
+	//decision logic
 
 	//obstacle check
 	if (obstacle == true) {
