@@ -2,7 +2,7 @@
 #include<iostream>
 #include<cstdlib>
 #include<ctime>   //for srand and rand
-#include<chrono>  //for adding delays
+#include<chrono>  //for adding delay
 #include<thread>
 #include <limits>
 using namespace std;
@@ -11,18 +11,16 @@ bool startDay(int battery);
 int getWeather();  //randomly generates weather
 bool checkObstacle();  //randomly generates obstacles
 int delivery_time(char location);  //gives the delivery time
-bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed); //delivery procedure for each delivery
-void displaySummary(int success, int failed, int delayed, int battery);//displaying summary
+bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed);
+void displaySummary(int success, int failed, int delayed, int battery);
 bool loadCheck(int);  //verifies if the load is within limit
 
 //MAIN FUNCTION
 int main() {
-	//initializing and declaring variables
+	//initializing variables
 	int batteryLevel = 100;
 	const int drain_per_trip = 15;
 	int success = 0, failed = 0, delayed = 0;  //delivery counters
-	char location;
-	int load;
 	srand(time(0));
 
 	if (startDay(batteryLevel) == true) {
@@ -31,33 +29,31 @@ int main() {
 		cout << "------------------------------------\n";
 		while (true)
 		{
+			char location;
+			int load;
 			//taking load input
-			cout << "Enter -1 to exit or\nEnter the delivery package load under 50kg: ";
+			cout << "Enter the delivery package load in kg: ";
 			cin >> load;
-			//exit condition
-			if (load == -1) {
-				cout << "\n\nEnd of Deliveries for today.\n";
-				displaySummary(success, failed, delayed, batteryLevel);
-				cout << "Exiting program...\nGoodbye!"; break;
-			}
+
 			//input validation
 			while (cin.fail()) {
 				cout << "Invalid input! Please enter a numeric value: ";
 				cin.clear(); // clear error flag
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard bad input
 				cin >> load; // ask again
-			}//*Chatgpt was used in this cin.fail part due to error of infinte loop in case of wrong input type*
+			}
 
 			if (loadCheck(load) == true) {
 
-				cout << "Enter location(A/B/C) or enter X to exit. ";//location input
+				cout << "Enter location(A/B/C) or enter X to exit. ";///location input
 				cin >> location;
 				cout << "------------------------------------\n";
 
 				//delivery location validation
 				if (location == 'A' || location == 'a' || location == 'B' || location == 'b' || location == 'C' || location == 'c') {
 					deliverPackage(location, batteryLevel, drain_per_trip, success, failed, delayed);
-					cout << "The estimated time for this delivery under normal circumstances will be " << delivery_time(location) << " minutes.\n";
+					//cout << "------------------------------------\n\n";
+					cout << "Time taken for this delivery was " << delivery_time(location) << " minutes.\n";
 					cout << "\n------------------------------------\n";
 				}
 				//exit condition
@@ -70,9 +66,11 @@ int main() {
 			}
 			else {
 				//heavy load warning
-				cout << "Please try again.\n";
+				cout << "Please reduce weight and try again.\n";
 				cout << "------------------------------------\n";
 			}
+
+
 		}
 
 	}
@@ -96,11 +94,10 @@ bool startDay(int battery) {
 		this_thread::sleep_for(chrono::seconds(1));
 		return true;
 	}
-	else if (start == 'N' || start == 'n') {
-		cout << "Delivery Day cancelled. Goodbye!\n";
+	else {
+		cout << "Delivery Day cancelled.Goodbye!\n";
 		return false;
 	}
-	else { cout << "Invalid input.\nExitting program.\n"; return false; }
 }
 //random weather generation
 int getWeather() {
@@ -146,13 +143,13 @@ bool loadCheck(int load) {
 		cout << "The weight is out of the load capacity.\n";
 		return false;
 	}
-	else { cout << "Oops! Cannot take this input."; }
+	else { cout << "Invalid load entered. "; return false; }
 
 }
 //time calculation
 int delivery_time(char location)
 {
-	cout << "\nEstimating the total delivery time...\n";
+	cout << "\n\nEstimating the total delivery time...\n";
 	this_thread::sleep_for(chrono::seconds(2));
 	if (location == 'A' || location == 'a') {
 		return 30;
@@ -165,7 +162,7 @@ int delivery_time(char location)
 	}
 	else { cout << "Could not estimate time\n"; }
 }
-//delivery decision
+//deliver decision
 bool deliverPackage(char location, int& battery, int drain_per_trip, int& success, int& failed, int& delayed) {
 
 	cout << "Delivering to " << location << " \n";
@@ -229,7 +226,7 @@ bool deliverPackage(char location, int& battery, int drain_per_trip, int& succes
 	return true;
 
 }
-//final summary
+//mission summary
 void displaySummary(int success, int failed, int delayed, int battery) {
 	cout << "------------------------------------\n";
 	cout << "         DAY SUMMARY" << endl;
